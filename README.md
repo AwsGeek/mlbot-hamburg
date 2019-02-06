@@ -1,5 +1,5 @@
 # Build a Machine Learning Enabled Bot using Amazon Web Services
-<p align="center"><img src="images/airbus-a320.jpg"></p>
+<p align="center"><img src="images/boeing-747.jpg"></p>
 
 ## Overview
 In this tutorial, you will build a an aircraft classification bot using Slack and Amazon Web Services, including AWS Lambda, Amazon SageMaker, and API Gateway.
