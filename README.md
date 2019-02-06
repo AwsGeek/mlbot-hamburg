@@ -1,14 +1,16 @@
-# Build a Machine Learning Enabled Bot using Amazon Web Services
+# Build a Serverless Machine Learning Bot
 <p align="center"><img src="images/boeing-747.jpg"></p>
 
 ## Overview
-In this tutorial, you will build a an aircraft classification bot using Slack and Amazon Web Services, including AWS Lambda, Amazon SageMaker, and API Gateway.
+In this tutorial, you will build a serverless bot using Slack and Amazon Web Services, including AWS Lambda, Amazon SageMaker, and API Gateway. The bot will help you identify aircraft founbd in images. 
 ### Objectives
 In this tutorial you will perform the following tasks:
 
 * **[Lab 1: Train an aircraft classifier](lab1)** -
-In this lab you will use Amazon SageMaker to train an aircraft classifier.
-* **[Lab 2: Create a private interface](lab2)** -
+In this lab you will use Amazon SageMaker to train an aircraft classification model and then create an AWS Lambda function to act as a private interface for your Amazon SageMaker endpoint.
+* **[Lab 2: Build an aircraft detector](lab2)** -
+In this lab you will use Amazon Rekognition to detect aircraft and create and AWS Lambda function to interact with Rekognition.
+* **[Lab 3: Create a private interface](lab3)** -
 In this lab you will use AWS Lambda to create a private interface for your Amazon SageMaker endpoint
 * **[Lab 3: Build a public interface](lab3)** -
 In this lab you will use Amazon API Gateway and AWS Lambda to create a public interface for your aircraft classifier
