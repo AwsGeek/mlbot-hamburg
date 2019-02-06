@@ -1,5 +1,5 @@
 # Lab 2: Create a private interface
-In this lab you will use AWS Lambda to create a private interfaace for your Amazon SageMaker endpoint
+In this lab you will use AWS Lambda to create a private interface to Rekognition for aircraft detection
 
 ## Task 1: Create a Lambda function
 Create an AWS Lambda function that uses Amazon SageMaker to classify an aircraft in an image
@@ -9,15 +9,15 @@ Create an AWS Lambda function that uses Amazon SageMaker to classify an aircraft
 <p align="center"><img src="images/lab5-create-function-1.jpg"></p>
 
 3. Fill out the following information for the Lambda function:
-* Name: **mlclassify**
-* Runtime: **Python 3.6**
+* Name: **mlbot-detect**
+* Runtime: **Python 3.7**
 * Role: **Create a custom role**
 
 <p align="center"><img src="images/lab2-create-function-2.jpg"></p>
 
 4. Specify the following information for the IAM role, then click the **Allow** button to continue:
 * IAM Role: **Create a new IAM Role**
-* Role Name: **mlclassify**
+* Role Name: **mlbot-detect**
 
 <p align="center"><img src="images/lab5-create-function-3.jpg"></p>
 
@@ -27,22 +27,28 @@ Create an AWS Lambda function that uses Amazon SageMaker to classify an aircraft
 
 ## Task 2: Update the IAM role
 Update the IAM role to allow invocation of the SageMaker InvokeEndpoint API
-1. Browse to the AWS IAM console to edit the **mlclassify** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlclassify
+1. Browse to the AWS IAM console to edit the **mlbot-detect** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-detect
 2. Click on the **Add inline policy** button
 
 <p align="center"><img src="images/lab5-update-iam-1.jpg"></p>
 
-3. Click on the **JSON** tab and replace the existing policy with the following. Replace ```<SageMaker Endpoint ARN>``` weith the ARN captured previously.
+3. Click on the **JSON** tab and replace the existing policy with the following. Replace ```<S3 bucket name>``` with the name of your S3 bucket.
 
 ```
 {
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "mlclassify",
+            "Sid": "mlbot-detect-rek",
             "Effect": "Allow",
-            "Action": "sagemaker:InvokeEndpoint",
-            "Resource": "<SageMaker Endpoint ARN>"
+            "Action": "rekognition:DetectLabels",
+            "Resource": "*"
+        },
+        {
+            "Sid": "mlbot-detect-s3",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::<S3 bucket name>/*"
         }
     ]
 }
@@ -51,45 +57,58 @@ Update the IAM role to allow invocation of the SageMaker InvokeEndpoint API
 
 <p align="center"><img src="images/lab2-update-iam-2.jpg"></p>
 
-5. Name the policy **mlclassify**, then click on the **Create policy** button to finish
+5. Name the policy **mlbot-detect**, then click on the **Create policy** button to finish
 
 <p align="center"><img src="images/lab5-update-iam-3.jpg"></p>
 
 ## Task 3: Update the Lambda function
 Update the Lambda Function classify an aircraft in an image using Amazon SageMaker InvokeEndpoint API
-1. Browse to the AWS Lambda console to edit the **mlclassify** Lamda function: https://console.aws.amazon.com/lambda/home#/functions/mlclassify
-2. Replace the **lambda_function.py** template code with the following ([mlclassify-lambda.py](mlclassify-lambda.py)). Replace ```<SageMaker Endpoint Name>``` with the name of your SageMaker endpoint.
+1. Browse to the AWS Lambda console to edit the **mlclassify** Lamda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-detect
 ```
-import json
 import boto3
-
 from botocore.vendored import requests
- 
-sage = boto3.Session().client(service_name='runtime.sagemaker') 
-names = ['airbus-a320','boeing-747','dornier-328']
+
+rek = boto3.client('rekognition')
 
 def lambda_handler(event, context):
-   
-    url = event["url"]
-
-    # download image bytes
-    bytes = requests.get(url).content
     
-    # classify aircraft in the image
-    response = sage.invoke_endpoint(EndpointName='<SageMaker Endpoint Name>', 
-                                   ContentType='application/x-image', 
-                                   Body=bytes)
-    scores = response['Body'].read()
-    scores = json.loads(scores)
-
-    aircraft = ""
-    if max(scores) > 0.90:
-        aircraft = names[scores.index(max(scores))]
+    # Location of the input image
+    if 'url' in event:
+        url = event['url']
+        bytes = requests.get(url).content
+        image = {'Bytes': bytes}
+    else:
+        bucket = event['bucket']
+        key = event['key']
+        image = {"S3Object": { "Bucket": bucket, "Name": key}}
     
-    return {
-        "statusCode": 200,
-        "body": aircraft
-    }
+    # Label(s) to look for
+    labels = event['labels']
+    labels = labels.split(",")
+
+    results = []
+    try:
+        
+      response = rek.detect_labels( Image = image )
+
+      for label in response['Labels']:
+        if label['Name'] in labels:
+          for instance in label['Instances']:
+
+            results.append( { 
+                'label' : label['Name'],
+                'score' : instance['Confidence'],
+                'left'  : instance['BoundingBox']['Left'],
+                'top'  : instance['BoundingBox']['Top'],
+                'width'  : instance['BoundingBox']['Width'],
+                'height'  : instance['BoundingBox']['Height']
+            })
+
+    except Exception as e:
+      print(e)
+
+     
+    return results
 ```
 3. Click the **Save** button to finish
 
@@ -97,18 +116,18 @@ def lambda_handler(event, context):
 
 ## Task 4: Test the Lambda function
 Create a test event and test your Lambda function 
-1. Browse to the AWS Lambda console to edit the **mlclassify** Lamda function: https://console.aws.amazon.com/lambda/home#/functions/mlclassify
+1. Browse to the AWS Lambda console to edit the **mlbot-detect** Lamda function: https://console.aws.amazon.com/lambda/home#/functions/mlclassify
 2. Click on the **Select a test event..** drop down and select **Configure test events**
 
 <p align="center"><img src="images/lab5-test-function-1.jpg"></p>
 
 3. Specify the following onformation for the test event:
 * Event template: **Hello World**
-* Event name: **mlclassify**
+* Event name: **mlbot-detect-detect**
 * Code:
 ```
 {
-  "url": "https://s3-us-west-2.amazonaws.com/awsgeek-devweek-austin/boeing-747.jpg"
+  "url": "https://s3-us-west-2.amazonaws.com/awsgeek-mlbot-pdx/boeing-747.jpg"
 }
 ```
 
