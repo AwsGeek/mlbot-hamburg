@@ -1,15 +1,15 @@
-# Lab 3: Build a public interface
-In this lab you will use AWS Lambda and Amazon API Gateway to create a public interface for your aircraft classifier.
+# Lab 3: Build the request handler function
+In this lab you will create an AWS Lambda function to use your aircraft detector and aircraft classifier .
 
 ## Task 1: Create a Lambda function
-Create an AWS Lambda function that uses Amazon Rekognition to determine if there are any aircraft in an image
+Create an AWS Lambda function that uses Amazon Rekognition to determine if there is a single aircraft in an image and Amazon SageMaker to classify the aircraft.
 1. Browse to the AWS Lambda console to create a new function: https://console.aws.amazon.com/lambda/home#/create
 2. Select the **Author from Scratch** option:
 
 <p align="center"><img src="images/lab2-create-function-1.jpg"></p>
 
 3. Fill out the following information for the Lambda function:
-* Name: **mlbot**
+* Name: **mlbot-handler**
 * Runtime: **Python 3.6**
 * Role: **Create a custom role**
 
@@ -17,7 +17,7 @@ Create an AWS Lambda function that uses Amazon Rekognition to determine if there
 
 4. Specify the following information for the IAM role, then click the **Allow** button to continue:
 * IAM Role: **Create a new IAM Role**
-* Role Name: **mlbot**
+* Role Name: **mlbot-handler**
 
 <p align="center"><img src="images/lab2-create-function-3.jpg"></p>
 
@@ -27,12 +27,12 @@ Create an AWS Lambda function that uses Amazon Rekognition to determine if there
 
 ## Task 2: Update the IAM role
 Update the IAM role to allow invocation of the **mlclassify* Lambda function
-1. Browse to the AWS IAM console to edit the **mlbot** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot
+1. Browse to the AWS IAM console to edit the **mlbot** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-handler
 2. Click on the **Add inline policy** button
 
 <p align="center"><img src="images/lab2-update-iam-1.jpg"></p>
 
-3. Click on the **JSON** tab and replace the existing policy with the following. Include the ARN of your **mldetect** Lambda function:
+3. Click on the **JSON** tab and replace the existing policy with the following. Include the ARN of your **mlbot-detect** and **mlbot-classify** Lambda functions:
 
 ```
 {
@@ -43,7 +43,8 @@ Update the IAM role to allow invocation of the **mlclassify* Lambda function
             "Effect": "Allow",
             "Action": "lambda:InvokeFunction",
             "Resource": [
-                "<mlclassify Function ARN>"
+                "<mlbot-detect Function ARN>",
+                "<mlbot-classify Function ARN>",
             ]
         }
     ]
@@ -53,11 +54,19 @@ Update the IAM role to allow invocation of the **mlclassify* Lambda function
 
 <p align="center"><img src="images/lab2-update-iam-2.jpg"></p>
 
-5. Name the policy **mlbot**, then click on the **Create policy** button to finish
+5. Name the policy **mlbot-handler**, then click on the **Create policy** button to finish
 
 <p align="center"><img src="images/lab2-update-iam-3.jpg"></p>
 
 ## Task 3: Update the Lambda function
+Your aircraft detector will ultimately respond with one of several message:
+1. There is no aircraft in the image
+2. There are too many aircraft in the image
+3. There is an unknown aircraft in the image
+4. There is a <aircraft type> in the image
+    
+Let's add the code to the Lambda function to 
+
 Add boilerplate code to respond correctly when Slack verifies your endpoint 
 1. Browse to the AWS Lambda console to edit the **mlbot** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot
 2. Replace the **lambda_function.py** template code with the following ([mlbot-lambda.py](mlbot-lambda.py)):
