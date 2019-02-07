@@ -53,7 +53,7 @@ The S3 bucket will be used to store training images for the SageMaker model and 
 3. When prompted to create an IAM role, enter the name of the S3 bucket create in the previous task, then click the **Create role** button to continue.
 4. Click on the **Create notebook instance** button to finish
 5. Wait for your notebook status to change to **InService**, then click the **Open** link. This will open Jupyter notebook in another tab.
-6. Load the Jupyter notebook for this lab by clicking the **Upload** button and providing the file to use: https://www.awsgeek.com/mlbot/mlbot.ipynb
+6. Load the Jupyter notebook for this lab by clicking the **Upload** button and providing the file to use: http://mlbot.awsgeek.com/hamburg19/mlbot.ipynb
 7. Click in the uploaded notebook name to open the notebook
 
 ## Task 3. Train the SageMaker model
