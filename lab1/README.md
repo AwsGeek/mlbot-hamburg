@@ -40,7 +40,7 @@ Create an AWS Lambda function that uses Amazon SageMaker to classify an aircraft
 2. Select the **Author from Scratch** option:
 3. Fill out the following information for the Lambda function:
 * Name: **mlbot-classify**
-* Runtime: **Python 3.6**
+* Runtime: **Python 3.7**
 * Role: **Create a custom role**
 4. Specify the following information for the IAM role, then click the **Allow** button to continue:
 * IAM Role: **Create a new IAM Role**
