@@ -75,34 +75,8 @@ Create an AWS Lambda function that uses Amazon SageMaker to classify an aircraft
 4. Specify the following information for the IAM role, then click the **Allow** button to continue:
 * IAM Role: **Create a new IAM Role**
 * Role Name: **mlbot-classify**
-5. Click the **Create** function' button to finish:
-
-## Task 2: Update the IAM role
-Update the IAM role to allow invocation of the SageMaker InvokeEndpoint API
-1. Browse to the AWS IAM console to edit the **mlbot-classify** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-classify
-2. Click on the **Add inline policy** button
-3. Click on the **JSON** tab and replace the existing policy with the following. Replace ```<S3 bucket name>``` with the name of your S3 bucket.
-
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "mlbot-classify",
-            "Effect": "Allow",
-            "Action": "sagemaker:InvokeEndpoint",
-            "Resource": "<SageMaker Endpoint ARN>"
-        }
-    ]
-}
-```
-4. Click on the **Review policy** button to continue
-5. Name the policy **mlbot-classify**, then click on the **Create policy** button to finish
-
-## Task 3: Update the Lambda function
-Update the Lambda Function invoke the Amazon SageMaker InvokeEndpoint API
-1. Browse to the AWS Lambda console to edit the **mlbot-classify** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-classify
-2. Replace the existing Lambda function code with the following. Replace ```<SageMaker endpoint name>``` with the name of your SageMaker endpoint. 
+5. Click the **Create** function' button
+6. Replace the existing Lambda function code with the following. Replace ```<SageMaker endpoint name>``` with the name of your SageMaker endpoint. 
 ```
 import json
 import boto3
@@ -132,22 +106,52 @@ def lambda_handler(event, context):
     
     return aircraft
 ```
-3. Click the **Save** button to finish
+7. Click the **Save** button to finish
 
-## Task 4: Test the Lambda function
+## Task 5: Test the Lambda function
 Create a test event and test your Lambda function 
 1. Browse to the AWS Lambda console to edit the **mlbot-classify** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-classify
 2. Click on the **Select a test event..** drop down and select **Configure test events**
 3. Specify the following onformation for the test event:
 * Event template: **Hello World**
-* Event name: **mlbot-classify**
+* Event name: **mlbot**
 * Code:
 ```
 {
-  "url": "https://www.awsgeek.com/mlbot/airbus-a320.jpg"
+  "url": "http://mlbot.awsgeek.com/hamburg19/airbus-a320.jpg"
 }
 ```
 4. Click on the **Create** button to continue
 5. Click click on the **Test** button to verify operation of your Lambda function and invocation of your SageMaker endpoint.
+
+What result do you get?
+
+## Task 6: Update the IAM role
+Update the IAM role to allow invocation of the SageMaker InvokeEndpoint API
+1. Browse to the AWS IAM console to edit the **mlbot-classify** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-classify
+2. Click on the **Add inline policy** button
+3. Click on the **JSON** tab and replace the existing policy with the following. Replace ```<S3 bucket name>``` with the name of your S3 bucket.
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "mlbot-classify",
+            "Effect": "Allow",
+            "Action": "sagemaker:InvokeEndpoint",
+            "Resource": "<SageMaker Endpoint ARN>"
+        }
+    ]
+}
+```
+4. Click on the **Review policy** button to continue
+5. Name the policy **mlbot-classify**, then click on the **Create policy** button to finish
+
+## Task 7: Test the Lambda function (again)
+1. Browse to the AWS Lambda console to edit the **mlbot-classify** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-classify
+2. Click click on the **Test** button to verify operation of your Lambda function and invocation of your SageMaker endpoint.
+
+What result do you get this time?
 
 ## This is the end of the lab
