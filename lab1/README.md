@@ -23,12 +23,12 @@ The S3 bucket will be used to store training images for the SageMaker model and 
 3. When prompted to create an IAM role, enter the name of the S3 bucket create in the previous task, then click the **Create role** button to continue.
 4. Click on the **Create notebook instance** button to finish
 5. Wait for your notebook status to change to **InService**, then click the **Open** link. This will open Jupyter notebook in another tab.
-6. Load the Jupyter notebook for this lab by clicking the **Upload** button and providing the file to use: http://mlbot.awsgeek.com/hamburg19/mlbot.ipynb
+6. Load the Jupyter notebook for this lab by clicking the **Upload** button and providing the file to use: https://www.awsgeek.com/hamburg19/mlbot.ipynb
 7. Click in the uploaded notebook name to open the notebook
 
 ## Task 3. Train the SageMaker model
 Execute the following steps in order to train your model
-1. Prepare for training. In cell 1, replace ```<replace with your bucket name>``` with the bucket name you created in a previous task, then click on the **Run** button to run this cell of the notebook.
+1. Prepare for training. In cell 1, replace **```<replace with your bucket name>```** with the bucket name you created in a previous task, then click on the **Run** button to run this cell of the notebook.
 2. Train the model. Select this cell, then click on the **Run** button to train the model. Training this model takes approximatley 5 to 10 minutes using a single ml.p3.2xlarge training instance. 
 3. While waiting for the training job to finish, browse to the SageMaker console and find training job. Click on the training job and open to view details and log activity.
 4. Deploy the model. Select this cell, then click on the **Run** button to deploy the model. Deploying this model can take several minutes. Note the endpoint name and ARN for later use.
