@@ -135,66 +135,30 @@ Update the IAM role to allow the Lambda function to interact with the SQS queue
 
 ## Task 7: Update the Lambda function
 1. Browse to the AWS Lambda console to edit the **mlbot-handler** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-handler
-2. Replace the existing Pythn code with the following:
+2. Replace just the lambda_handler code in your function with the following code snippet. This will take requests off the queue one at a time and process.:
 ```
-import json
-import boto3
-
-from botocore.vendored import requests
- 
-sage = boto3.Session().client(service_name='runtime.sagemaker') 
-names = ['airbus-a320','boeing-747','dornier-328']
+...
 
 def lambda_handler(event, context):
-   
-    url = event["url"]
-
-    # download image bytes
-    bytes = requests.get(url).content
     
-    # classify aircraft in the image
-    response = sage.invoke_endpoint(EndpointName='<SageMaker Endpoint Name>', 
-                                   ContentType='application/x-image', 
-                                   Body=bytes)
-    scores = response['Body'].read()
-    scores = json.loads(scores)
+    for record in event['Records']:
 
-    aircraft = ""
-    if max(scores) > 0.90:
-        aircraft = names[scores.index(max(scores))]
-    
-    return {
-        "statusCode": 200,
-        "body": aircraft
-    }
+        request = json.loads(record['body'])
+        
+        print(classify_aircraft(request['url']))
 ```
 3. Click the **Save** button to finish
 
-<p align="center"><img src="images/lab5-update-function-1.jpg"></p>
-
-## Task 4: Test the Lambda function
-Create a test event and test your Lambda function 
-1. Browse to the AWS Lambda console to edit the **mlclassify** Lamda function: https://console.aws.amazon.com/lambda/home#/functions/mlclassify
-2. Click on the **Select a test event..** drop down and select **Configure test events**
-
-<p align="center"><img src="images/lab5-test-function-1.jpg"></p>
-
-3. Specify the following onformation for the test event:
-* Event template: **Hello World**
-* Event name: **mlclassify**
-* Code:
+## Task 8: Test the Lambda function
+Test the Lambda function and SQS trigger
+1. Browse to the SQS console and select the **mlbot-requests** queue: https://console.aws.amazon.com/sqs/home
+2. From the **Queue Actions** dropdown, select **Send a Message**
+3. Use the following to as the body of the message:
 ```
 {
-  "url": "https://s3-us-west-2.amazonaws.com/awsgeek-devweek-austin/boeing-747.jpg"
+  "url": "https://s3-us-west-2.amazonaws.com/awsgeek-mlbot-pdx/boeing-747.jpg"
 }
 ```
-
-<p align="center"><img src="images/lab5-test-function-2.jpg"></p>
-
 4. Click on the **Create** button to continue
+5. Verify the trigger was succesfull by inspecting the **mlbot-handler** function logs
 
-<p align="center"><img src="images/lab5-test-function-3.jpg"></p>
-
-5. Click click on the **Test** button, then verify the output of the test matches the example output below
-
-<p align="center"><img src="images/lab5-test-function-4.jpg"></p>
