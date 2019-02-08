@@ -18,22 +18,15 @@ In this lab you will create a Slack bot that allows you to send requests to your
 The Request URL will show **Verified** if Slack can successfully reach your mlbot Lambda function via the API Gateway
 3. In the **Subscribe to Bot Events** section, click on the **Add Bot User Event** button, then select the **app_mentions** event type. Click in the **Save Changes** button to finish.
 
-## Task 3: Update the Lambda function
-Add code to the **mlbot** funtion to parse and dispatch incomoing requests from your Slack bot. 
-1. Browse to the AWS Lambda console to edit the **mlbot** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-dispatch
-2. Replace the **lambda_function.py** template code with the following. In addition, replace:
-
-* **```<Bot User OAuth Access Token>```** with the token captured earlier in this lab
+## Task 3: Update the dispatch Lambda functions
+Update code to the **mlbot-dispatch** funtion to parse and dispatch incomoing requests from your Slack bot. 
+1. Browse to the AWS Lambda console to edit the **mlbot-dispatch** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-dispatch
+2. Replace the **lambda_function.py** template code with the following. In addition, replace **```<SQS queue URL>```** with the URL of your SQS queue
 ```
 import boto3
-import json
-import re
-from botocore.vendored import requests
 
 session = boto3.session.Session()
-lmbda = session.client('lambda')
-
-slackurl = 'https://slack.com/api/chat.postMessage'
+sqs = session.client('sqs')
 
 def response(code, body):
     return {
@@ -48,10 +41,6 @@ def success(res=None):
 def failure(err):
     return response(400, err.message)
  
-functions = { 'classify': '<mlclassify function ARN>' } 
-commands = '|'.join(functions.keys())
-regex = '(%s)\s+<(.*)>' % commands
-
 def lambda_handler(event, context):
  
     print(event)
@@ -62,37 +51,72 @@ def lambda_handler(event, context):
 
     if params['type'] == "event_callback":
 
-        event = params['event']
-        text = event['text']
-        matches = re.search( regex, text, re.IGNORECASE)
-        
-        if matches:
-            
-            cmd = matches.group(1)
-            url = matches.group(2)
-            
-            lres = lmbda.invoke(
-                FunctionName = functions[cmd],
-                InvocationType = 'RequestResponse',
-                Payload = json.dumps({"url":url})
-            )
-            
-            result = json.loads(lres['Payload'].read().decode('utf8'))
-
-            data = {'token':'<Bot User OAuth Access Token>', 
-                    'channel':event['channel'],
-                    'thread_ts':event['ts'],
-                    'text': result["body"] } 
-              
-            r = requests.post(url = slackurl, data = data)     
-        
+        response = sqs.send_message(
+            QueueUrl="<SQS queue URL>",
+            MessageBody=(event['body'])
+        )
         return success()        
         
     return failure(Exception('Invalid event type: %s' % (params['type'])))
 ```
 3. Click the **Save** button to finish
 
-<p align="center"><img src="images/lab3-update-function-1.jpg"></p>
+## Task 4: Update the handler Lambda functions
+Update code to the **mlbot-handler** funtion to parse and dispatch incomoing requests from your Slack bot. 
+1. Browse to the AWS Lambda console to edit the **mlbot-handler** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-handler
+2. Replace the **lambda_function.py** template code with the following. In addition, replace **```<Bot User OAuth Access Token>```** with the token captured earlier in this lab
+```
+import re
+import json
+import boto3
+from botocore.vendored import requests
+
+lam = boto3.client('lambda')
+
+def classify_aircraft(url):
+
+    aircraft = "None";    
+    result = lam.invoke(
+        FunctionName="mlbot-detect",
+        InvocationType='RequestResponse',
+        Payload=json.dumps({ "url": url })
+    )
+    detected = json.loads(result['Payload'].read().decode('utf8'))
+
+    if len(detected) == 1 and detected[0]['score'] > 99:
+        result = lam.invoke(
+            FunctionName="mlbot-classify",
+            InvocationType='RequestResponse',
+            Payload=json.dumps({ "url": url})
+        )
+        aircraft = json.loads(result['Payload'].read().decode('utf8'))
+        
+    return aircraft
+
+def lambda_handler(event, context):
+    
+    for record in event['Records']:
+
+        request = json.loads(record['body'])
+        
+        event = request['event']
+        text = event['text']
+        
+        matches = re.search( 'classify\s+<(.*)>', text, re.IGNORECASE)
+        if matches:
+            
+            url = matches.group(1)
+            aircraft = classify_aircraft(url)
+            
+
+            data = {'token':'<Bot User OAuth Access Token>', 
+                    'channel':event['channel'],
+                    'thread_ts':event['ts'],
+                    'text': aircraft } 
+              
+            r = requests.post(url = 'https://slack.com/api/chat.postMessage', data = data)     
+```
+3. Click the **Save** button to finish
 
 ## Task 4: Test the Slack bot
 1. Send the following request to the Slack bot and verify the response from the Lambda function
@@ -101,8 +125,6 @@ def lambda_handler(event, context):
 @mlbot classify https://s3-us-west-2.amazonaws.com/awsgeek-devweek-austin/boeing-747.jpg
 @mlbot classify https://s3-us-west-2.amazonaws.com/awsgeek-devweek-austin/dornier-328.jpg
 ```
-
-<p align="center"><img src="images/lab5-test-bot-2.jpg"></p>
 
 2. Experiment with other images to verify that the bot operates corretly on images with and without aircraft in them.
 
