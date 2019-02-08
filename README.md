@@ -23,8 +23,6 @@ In this lab you will tear down all AWS resources created during this tutorial.
 * AWS account
 * Slack account
 
-_**Note:** For this tutorial you will be creating and using AWS resources including Amazon S3, SageMaker, Lambda, and API Gateway. All AWS resources must be created in the same AWS region._
-
-_Amazon SageMaker is currently available in the following regions: US East (Ohio), US East (N. Virginia), US West (Oregon), Asia Pacific (Seoul), Asia Pacific (Sydney), Asia Pacific (Tokyo), EU (Frankfurt), EU (Ireland), and AWS GovCloud (US)._
+_**Note:** For this tutorial you will be creating and using AWS resources including Amazon S3, SageMaker, Lambda, SQS, and API Gateway. All AWS resources must be created in the same AWS region._
 
 _For an up-to-date list of services and supported regions, see https://docs.aws.amazon.com/general/latest/gr/rande.html_
