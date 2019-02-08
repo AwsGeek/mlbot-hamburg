@@ -2,7 +2,7 @@
 <p align="center"><img src="images/boeing-747.jpg"></p>
 
 ## Overview
-In this tutorial, you will build a serverless bot using Slack and Amazon Web Services, including AWS Lambda, Amazon SageMaker, and API Gateway. The bot will help you identify aircraft founbd in images. 
+In this tutorial, you will build a serverless bot using Slack and Amazon Web Services, including AWS Lambda, Amazon SageMaker, SQS, and API Gateway. The bot will help you classify commercial aircraft found in images. 
 ### Objectives
 In this tutorial you will perform the following tasks:
 
