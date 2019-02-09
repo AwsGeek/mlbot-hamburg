@@ -1,4 +1,4 @@
-# Lab 5: Cleanup
+# Cleanup
  In this lab you will tear down all AWS resources created during this tutorial.
 
 ## Task 1: Lambda resources
