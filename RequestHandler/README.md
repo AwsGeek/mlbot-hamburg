@@ -159,6 +159,6 @@ Test the Lambda function and SQS trigger
   "url": "https://www.awsgeek.com/hamburg19/airbus-a320.jpg"
 }
 ```
-4. Click on the **Create** button to continue
+4. Click on the **Send Message** button to continue
 5. Verify the trigger was succesfull by inspecting the **mlbot-handler** function logs
 
