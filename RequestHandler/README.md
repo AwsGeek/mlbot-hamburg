@@ -91,14 +91,14 @@ Create a test event and test your Lambda function
 
 ## Task 4: Create an SQS Queue
 1. Browse to the SQS console to create an SQS queue for requests: https://console.aws.amazon.com/sqs/home#create-queue
-2. Click on **API Gateway** in the **Add triggers** section
-3. Fill out the following information for the queue:
+2. Fill out the following information for the queue:
 * Name: **mlbot-requests**
 * Region: same as other resources
 * Type: **Standard Queue**
-4. Click on the **Quick Create Queue** button to use other detfault settings and create the queue
-5. Once created, select the **mlbot-requests** queue, and from the **Queue Actions** dropdown, select **Configure Trigger for Lambda Function**
-6. Choose your **mlbot-handler** Lambda function, then click the **Save** button.
+3. Click on the **Quick Create Queue** button to use other detfault settings and create the queue
+
+4. Once created, select the **mlbot-requests** queue, and from the **Queue Actions** dropdown, select **Configure Trigger for Lambda Function**
+5. Choose your **mlbot-handler** Lambda function, then click the **Save** button.
 
 What happens?
 
