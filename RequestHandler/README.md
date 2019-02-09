@@ -1,4 +1,4 @@
-# Lab 3: Build the request handler
+# Request handler
 In this lab you will use an SQS queue and Lambda function to handle incoming requests.
 
 ## Task 1: Create a Lambda function
