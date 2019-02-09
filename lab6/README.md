@@ -16,7 +16,7 @@ Delete all SageMaker resources used during this tutorial
 1. Delete **mlbot** APIs: https://console.aws.amazon.com/apigateway/home#/apis
 
 ## Task 4: IAM resources
-1. Delete the **mlbot** roles: https://console.aws.amazon.com/iam/home#/roles
+1. Delete the **mlbot*** roles: https://console.aws.amazon.com/iam/home#/roles
 
 ## Task 5: S3 resources
 1. Delete the bucket you created: https://console.aws.amazon.com/s3
