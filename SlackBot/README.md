@@ -1,4 +1,4 @@
-# Lab 5: Build a Slack bot
+# Slack bot
 In this lab you will create a Slack bot that allows you to send requests to your object detector
 
 ## Task 1: Create a Slack app
