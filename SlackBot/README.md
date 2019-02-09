@@ -10,7 +10,6 @@ In this lab you will create a Slack bot that allows you to send requests to your
 * Default username: **mlbot**
 * Always Show My Bot as Online: **On**
 5. In the **Settings** section, select **Install App**, then click the **Install App to Workspace** button. Follow the instructions to authorize the installation and use of your new app. 
-6. Copy the **Bot User OAuth Access Token** to finish. This will be required in the next lab
 
 ## Task 2: Create an event subscription  
 1. In the **Features** section, select **Event Subscriptions**, then click the **Enable Events** switch. 
