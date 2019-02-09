@@ -68,7 +68,7 @@ def lambda_handler(event, context):
 3. Click the **Save** button to finish
 
 ## Task 4: Create an API Gateway
-Expose a publicc interface for your Lambda function
+Expose a public interface for your Lambda function
 1. Browse to the AWS Lambda console to edit the **mlbot-dispatch** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-dispatch
 2. Click on **API Gateway** in the **Add triggers** section
 3. Configure the API Gateway trigger as follows, then click on the **Add** button to continue
