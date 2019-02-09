@@ -118,7 +118,7 @@ Update the IAM role to allow the Lambda function to interact with the SQS queue
             "Action": [
                 "sqs:DeleteMessage",
                 "sqs:ReceiveMessage",
-                "sqs.GetQueueAttributes"
+                "sqs:GetQueueAttributes"
             ],
             "Resource": "<SQS queue ARN>"
         }
