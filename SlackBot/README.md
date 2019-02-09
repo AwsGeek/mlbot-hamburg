@@ -1,5 +1,5 @@
 # Slack bot
-In this lab you will create a Slack bot that allows you to send requests to your object detector
+In this lab you will create a Slack bot that allows you to send requests to your aircraft classifier
 
 ## Task 1: Create a Slack app
 1. Navigate to https://api.slack.com/apps?new_app=1, login to your workspace if necessary.
