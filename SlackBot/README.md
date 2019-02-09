@@ -120,9 +120,9 @@ def lambda_handler(event, context):
 ## Task 4: Test the Slack bot
 1. Send the following request to the Slack bot and verify the response from the Lambda function
 ```
-@mlbot classify https://s3-us-west-2.amazonaws.com/awsgeek-devweek-austin/airbus-a320.jpg
-@mlbot classify https://s3-us-west-2.amazonaws.com/awsgeek-devweek-austin/boeing-747.jpg
-@mlbot classify https://s3-us-west-2.amazonaws.com/awsgeek-devweek-austin/dornier-328.jpg
+@mlbot classify https://www.awsgeek.com/hamburg19/airbus-a320.jpg
+@mlbot classify https://www.awsgeek.com/hamburg19/boeing-747.jpg
+@mlbot classify https://www.awsgeek.com/hamburg19/dornier-328.jpg
 ```
 
 2. Experiment with other images to verify that the bot operates corretly on images with and without aircraft in them.
