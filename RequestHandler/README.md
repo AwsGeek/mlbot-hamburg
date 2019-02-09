@@ -156,7 +156,7 @@ Test the Lambda function and SQS trigger
 3. Use the following to as the body of the message:
 ```
 {
-  "url": "https://s3-us-west-2.amazonaws.com/awsgeek-mlbot-pdx/boeing-747.jpg"
+  "url": "https://www.awsgeek.com/hamburg19/airbus-a320.jpg"
 }
 ```
 4. Click on the **Create** button to continue
