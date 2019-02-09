@@ -1,5 +1,5 @@
 
-# Lab 1: Train an aircraft classifier
+# Lab: Create an aircraft classifier
 In this lab you will use Amazon SageMaker and Amazon Lambda to help classify single aircraft in an image.
 
 ## Task 1: Create an S3 bucket
