@@ -1,4 +1,4 @@
-# Lab 4: Build a public interface
+# Request handler
 In this lab you will use AWS Lambda and Amazon API Gateway to create a public interface for your aircraft classifier.
 
 ## Task 1: Create a Lambda function
