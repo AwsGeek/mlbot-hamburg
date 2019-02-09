@@ -15,11 +15,11 @@ In this lab you will use Amazon Rekognition to detect aircraft and create and AW
 * **[Request handler](RequestHandler)** -
 In this lab you will use AWS Lambda and SQS to queue and process classification requests
 
-* **[Slack bot](SlackBot)** -
-In this lab you will create a Slack bot that allows you to send request to your aircraft classify
-
 * **[Request dispatcher](RequestDispatcher)** -
 In this lab you will use Amazon API Gateway and AWS Lambda to create a public interface for your aircraft classifier
+
+* **[Slack bot](SlackBot)** -
+In this lab you will create a Slack bot that allows you to send request to your aircraft classify
 
 * **[Cleanup](Cleanup)** - 
 In this lab you will tear down all AWS resources created during this tutorial.
