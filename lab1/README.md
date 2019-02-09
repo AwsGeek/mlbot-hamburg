@@ -1,5 +1,5 @@
 
-# Lab 1: Train an aircraft classifier
+# Aircraft classifier
 In this lab you will use Amazon SageMaker and Amazon Lambda to help classify single aircraft in an image.
 
 ## Task 1: Create an S3 bucket
@@ -29,7 +29,7 @@ The S3 bucket will be used to store training images for the SageMaker model and 
 ## Task 3. Train the SageMaker model
 Execute the following steps in order to train your model
 1. Prepare for training. In cell 1, replace **```<replace with your bucket name>```** with the bucket name you created in a previous task, then click on the **Run** button to run this cell of the notebook.
-2. Train the model. Select this cell, then click on the **Run** button to train the model. Training this model takes approximatley 5 to 10 minutes using a single ml.p3.2xlarge training instance. 
+2. Train the model. Select this cell, then click on the **Run** button to train the model. Training this model takes approximately 10 minutes using a single ml.p3.2xlarge training instance. 
 3. While waiting for the training job to finish, browse to the SageMaker console and find training job. Click on the training job and open to view details and log activity.
 4. Deploy the model. Select this cell, then click on the **Run** button to deploy the model. Deploying this model can take several minutes. Note the endpoint name and ARN for later use.
 5. Finally, Test the model. Select this cell, then click on the **Run** button to test the model. Verify the classification matches the displayed aircraft.
@@ -123,5 +123,3 @@ Update the IAM role to allow invocation of the SageMaker InvokeEndpoint API
 2. Click click on the **Test** button to verify operation of your Lambda function and invocation of your SageMaker endpoint.
 
 What result do you get this time?
-
-## This is the end of the lab
