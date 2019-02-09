@@ -22,6 +22,7 @@ Update code to the **mlbot-dispatch** funtion to parse and dispatch incomoing re
 1. Browse to the AWS Lambda console to edit the **mlbot-dispatch** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-dispatch
 2. Replace the **lambda_function.py** template code with the following. In addition, replace **```<SQS queue URL>```** with the URL of your SQS queue
 ```
+import json
 import boto3
 
 session = boto3.session.Session()
