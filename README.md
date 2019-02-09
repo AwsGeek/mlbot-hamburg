@@ -6,7 +6,7 @@ In this tutorial, you will build a serverless bot using Slack and Amazon Web Ser
 ### Objectives
 In this tutorial you will perform the following tasks:
 
-* **[Lab 1: Train an aircraft classifier](lab1)** -
+* **[Create an aircraft classifier](AircraftClassifier)** -
 In this lab you will use Amazon SageMaker to train an aircraft classification model and then create an AWS Lambda function to act as a private interface for your Amazon SageMaker endpoint.
 * **[Lab 2: Build an aircraft detector](lab2)** -
 In this lab you will use Amazon Rekognition to detect aircraft and create and AWS Lambda function to interact with Rekognition.
