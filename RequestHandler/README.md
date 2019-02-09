@@ -63,7 +63,7 @@ Update the IAM role to allow invocation of the **mlbot-detect** and **mlbot-clas
             "Action": "lambda:InvokeFunction",
             "Resource": [
                 "<mlbot-detect Function ARN>",
-                "<mlbot-classify Function ARN>",
+                "<mlbot-classify Function ARN>"
             ]
         }
     ]
