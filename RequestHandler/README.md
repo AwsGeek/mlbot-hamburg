@@ -42,8 +42,7 @@ def classify_aircraft(url):
 
 def lambda_handler(event, context):
     
-    print(classify_aircraft(event['url']))
-
+    print("Aircraft detected: " + classify_aircraft(request['url']))
 ```
 7. Click the **Save** button to finish
 
@@ -145,7 +144,7 @@ def lambda_handler(event, context):
 
         request = json.loads(record['body'])
         
-        print(classify_aircraft(request['url']))
+        print("Aircraft detected: " + classify_aircraft(request['url']))
 ```
 3. Click the **Save** button to finish
 
