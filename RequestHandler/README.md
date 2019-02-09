@@ -82,7 +82,7 @@ Create a test event and test your Lambda function
 * Code:
 ```
 {
-  "url": "https://www.awsgeek.com/hamburg19/boeing-747.jpg"
+  "url": "https://www.awsgeek.com/hamburg19/airbus-a320.jpg"
 }
 ```
 4. Click on the **Create** button to continue
