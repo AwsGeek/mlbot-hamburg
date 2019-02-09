@@ -1,4 +1,4 @@
-# Lab 2: Build an aircraft detector
+# Build an aircraft detector
 In this lab you will use AWS Lambda and Amazon Rekognition to create an aircraft detector
 
 ## Task 1: Create a Lambda function
