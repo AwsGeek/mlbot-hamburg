@@ -48,34 +48,37 @@ Create an AWS Lambda function that uses Amazon SageMaker to classify an aircraft
 5. Click the **Create** function' button
 6. Replace the existing Lambda function code with the following. Replace ```<SageMaker endpoint name>``` with the name of your SageMaker endpoint. 
 ```
+import os
 import json
 import boto3
 
 from botocore.vendored import requests
  
 sage = boto3.Session().client(service_name='runtime.sagemaker') 
-names = ['airbus-a320','boeing-747','dornier-328']
+names = ['Airbus A320','Boeing 747','Dornier 328']
 
 def lambda_handler(event, context):
-   
+    print(event)  
+ 
     url = event["url"]
 
-    # download image bytes
     bytes = requests.get(url).content
     
-    # classify aircraft in the image
-    response = sage.invoke_endpoint(EndpointName='<SageMaker endpoint name>', 
-                                   ContentType='application/x-image', 
-                                   Body=bytes)
+    response = sage.invoke_endpoint(EndpointName=os.environ['EndpointName'], 
+                                    ContentType='application/x-image', 
+                                    Body=bytes)
     scores = response['Body'].read()
     scores = json.loads(scores)
 
-    aircraft = ""
-    if max(scores) > 0.90:
-        aircraft = names[scores.index(max(scores))]
+    score = max(scores)
+    aircraft = names[scores.index(score)]
+
+    result =  "%s (%.1f)" % (aircraft, 100*score)
+    print(result)
     
-    return aircraft
+    return result
 ```
+7. Add an environment variable named **EndpointName** and provide the name of your SageMaker endpoint.
 7. Click the **Save** button to finish
 
 ## Task 5: Test the Lambda function
