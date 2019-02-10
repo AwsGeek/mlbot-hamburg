@@ -19,7 +19,7 @@ Update the Lambda Function classify an aircraft in an image using Amazon SageMak
 import boto3
 from botocore.vendored import requests
 
-rek = boto3.client('rekognition')
+rek = boto3.client('rekognition', region_name='eu-west-1')
 
 def lambda_handler(event, context):
     print(event)
