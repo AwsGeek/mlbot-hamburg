@@ -110,7 +110,7 @@ Update the IAM role to allow invocation of the SageMaker InvokeEndpoint API
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "mlbotclassify",
+            "Sid": "mlbot",
             "Effect": "Allow",
             "Action": "sagemaker:InvokeEndpoint",
             "Resource": "<SageMaker Endpoint ARN>"
