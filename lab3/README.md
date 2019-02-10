@@ -15,8 +15,11 @@ Create an AWS Lambda function that coordinates detection and classification of a
 5. Click the **Create** function' button to finish:
 6. Edit the Lambda function, replace with the following Python code. 
 ```
+import os
+import re
 import json
 import boto3
+from botocore.vendored import requests
 
 lam = boto3.client('lambda')
 
@@ -24,7 +27,7 @@ def classify_aircraft(url):
 
     aircraft = "None";    
     result = lam.invoke(
-        FunctionName="mlbot-detect",
+        FunctionName=os.environ['DetectorName'],
         InvocationType='RequestResponse',
         Payload=json.dumps({ "url": url })
     )
@@ -32,7 +35,7 @@ def classify_aircraft(url):
 
     if len(detected) == 1 and detected[0]['score'] > 99:
         result = lam.invoke(
-            FunctionName="mlbot-classify",
+            FunctionName=os.environ['ClassifierName'],
             InvocationType='RequestResponse',
             Payload=json.dumps({ "url": url})
         )
@@ -41,10 +44,12 @@ def classify_aircraft(url):
     return aircraft
 
 def lambda_handler(event, context):
+    print(event)
     
     print("Aircraft detected: " + classify_aircraft(event['url']))
 ```
-7. Click the **Save** button to finish
+7. Create environment variables **DetextorName** and **ClassifierName** and set to the names of your Lambda functions **mlbot-detect** and **mlbot-classify**
+8. Click the **Save** button to finish
 
 ## Task 2: Update the IAM role
 Update the IAM role to allow invocation of the **mlbot-detect** and **mlbot-classify** Lambda functions
