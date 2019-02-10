@@ -22,6 +22,7 @@ Update code to the **mlbot-dispatch** funtion to parse and dispatch incomoing re
 1. Browse to the AWS Lambda console to edit the **mlbot-dispatch** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-dispatch
 2. Replace the **lambda_function.py** template code with the following. In addition, replace **```<SQS queue URL>```** with the URL of your SQS queue
 ```
+import os
 import json
 import boto3
 
@@ -52,20 +53,22 @@ def lambda_handler(event, context):
     if params['type'] == "event_callback":
 
         response = sqs.send_message(
-            QueueUrl="<SQS queue URL>",
+            QueueUrl=os.environ['QueueUrl'],
             MessageBody=(event['body'])
         )
         return success()        
         
     return failure(Exception('Invalid event type: %s' % (params['type'])))
 ```
-3. Click the **Save** button to finish
+3. Create an environment variable **QueueUrl** and set to the URL of you SQS queue
+4. Click the **Save** button to finish
 
 ## Task 4: Update the handler Lambda functions
 Update code to the **mlbot-handler** funtion to parse and dispatch incomoing requests from your Slack bot. 
 1. Browse to the AWS Lambda console to edit the **mlbot-handler** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-handler
-2. Replace the **lambda_function.py** template code with the following. In addition, replace **```<Bot User OAuth Access Token>```** with the token captured earlier in this lab
+2. Replace the **lambda_function.py** template code with the following. 
 ```
+import os
 import re
 import json
 import boto3
@@ -77,7 +80,7 @@ def classify_aircraft(url):
 
     aircraft = "None";    
     result = lam.invoke(
-        FunctionName="mlbot-detect",
+        FunctionName=os.environ['DetectorName'],
         InvocationType='RequestResponse',
         Payload=json.dumps({ "url": url })
     )
@@ -85,7 +88,7 @@ def classify_aircraft(url):
 
     if len(detected) == 1 and detected[0]['score'] > 99:
         result = lam.invoke(
-            FunctionName="mlbot-classify",
+            FunctionName=os.environ['ClassifierName'],
             InvocationType='RequestResponse',
             Payload=json.dumps({ "url": url})
         )
@@ -94,6 +97,7 @@ def classify_aircraft(url):
     return aircraft
 
 def lambda_handler(event, context):
+    print(event)
     
     for record in event['Records']:
 
@@ -107,16 +111,17 @@ def lambda_handler(event, context):
             
             url = matches.group(1)
             aircraft = classify_aircraft(url)
-            
+            print(aircraft)
 
-            data = {'token':'<Bot User OAuth Access Token>', 
+            data = {'token':os.environ['SlackToken'], 
                     'channel':event['channel'],
                     'thread_ts':event['ts'],
-                    'text': aircraft } 
+                    'text': "Aircraft detected: " + aircraft } 
               
             r = requests.post(url = 'https://slack.com/api/chat.postMessage', data = data)     
 ```
-3. Click the **Save** button to finish
+3. Create an environment variable **SlackToken** and set to your **Bot User OAuth Access Token**
+4. Click the **Save** button to finish
 
 ## Task 4: Test the Slack bot
 1. Send the following request to the Slack bot and verify the response from the Lambda function
