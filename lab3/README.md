@@ -42,7 +42,7 @@ def classify_aircraft(url):
 
 def lambda_handler(event, context):
     
-    print("Aircraft detected: " + classify_aircraft(request['url']))
+    print("Aircraft detected: " + classify_aircraft(event['url']))
 ```
 7. Click the **Save** button to finish
 
