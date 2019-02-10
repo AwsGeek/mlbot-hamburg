@@ -46,7 +46,7 @@ Create an AWS Lambda function that uses Amazon SageMaker to classify an aircraft
 * IAM Role: **Create a new IAM Role**
 * Role Name: **mlbot-classify**
 5. Click the **Create** function' button
-6. Replace the existing Lambda function code with the following. Replace ```<SageMaker endpoint name>``` with the name of your SageMaker endpoint. 
+6. Replace the existing Lambda function code with the following.
 ```
 import os
 import json
