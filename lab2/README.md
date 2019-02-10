@@ -22,11 +22,11 @@ from botocore.vendored import requests
 rek = boto3.client('rekognition')
 
 def lambda_handler(event, context):
+    print(event)
     
-    # Location of the input image
     url = event['url']
     bytes = requests.get(url).content
-    image = {'Bytes': bytes}
+    image = {'Bytes': bytes }
     
     results = []
     try:
@@ -49,7 +49,7 @@ def lambda_handler(event, context):
     except Exception as e:
       print(e)
 
-     
+    print(results)
     return results
 ```
 7. Click the **Save** button to finish
@@ -65,7 +65,7 @@ Update the IAM role to allow invocation of the SageMaker InvokeEndpoint API
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "mlbotdetect",
+            "Sid": "mlbot",
             "Effect": "Allow",
             "Action": "rekognition:DetectLabels",
             "Resource": "*"
