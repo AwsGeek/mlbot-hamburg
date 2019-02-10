@@ -1,0 +1,288 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+
+Parameters:
+  ModelDataUrl: 
+    Type: String
+  SlackToken: 
+    Type: String
+
+Resources: 
+
+  WebBucket:
+    Type: AWS::S3::Bucket
+
+  Endpoint:
+    Type: "AWS::SageMaker::Endpoint"
+    Properties:
+      EndpointConfigName:
+        !GetAtt EndpointConfig.EndpointConfigName
+
+  EndpointConfig:
+    Type: "AWS::SageMaker::EndpointConfig"
+    Properties:
+      ProductionVariants:
+        - InitialInstanceCount: 1
+          InitialVariantWeight: 1.0
+          InstanceType: ml.m4.xlarge
+          ModelName: !GetAtt Model.ModelName
+          VariantName: !GetAtt Model.ModelName
+  Model:
+    Type: "AWS::SageMaker::Model"
+    Properties:
+      PrimaryContainer:
+        Image: !Sub '433757028032.dkr.ecr.${AWS::Region}.amazonaws.com/image-classification:1'
+        ModelDataUrl: !Ref ModelDataUrl
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+
+  ExecutionRole: 
+    Type: "AWS::IAM::Role"
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Allow"
+            Principal: 
+              Service: 
+                - "sagemaker.amazonaws.com"
+            Action: 
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies: 
+        - 
+          PolicyName: "root"
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: "Allow"
+                Action: "*"
+                Resource: "*"
+
+  ClassifierPolicy:
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: Classifier
+      Roles:
+        - !Ref ClassifierRole
+      PolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Action: 
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - 
+            Effect: Allow
+            Action: 
+                - sagemaker:InvokeEndpoint
+            Resource: !Ref Endpoint
+
+  ClassifierRole: 
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: "/"
+                
+  ClassifierFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.lambda_handler
+      Runtime: python3.7
+      CodeUri: ./Classifier
+      Role: !GetAtt ClassifierRole.Arn
+      Environment:
+        Variables:
+          EndpointName: !GetAtt Endpoint.EndpointName
+
+  DetectorPolicy:
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: Detector
+      Roles:
+        - !Ref DetectorRole
+      PolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Action: 
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - 
+            Effect: Allow
+            Action: 
+                - rekognition:DetectLabels
+            Resource: "*"
+
+  DetectorRole: 
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: "/"
+                
+  DetectorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.lambda_handler
+      Runtime: python3.7
+      CodeUri: ./Detector
+      Role: !GetAtt DetectorRole.Arn
+
+  RequestQueue:
+    Type: AWS::SQS::Queue
+
+  HandlerPolicy:
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: Handler
+      Roles:
+        - !Ref HandlerRole
+      PolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Action: 
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - 
+            Effect: Allow
+            Action: 
+                - lambda:InvokeFunction
+            Resource:
+                - !GetAtt ClassifierFunction.Arn
+                - !GetAtt DetectorFunction.Arn
+          - 
+            Effect: Allow
+            Action: 
+                - sqs:DeleteMessage
+                - sqs:ReceiveMessage
+                - sqs:GetQueueAttributes
+            Resource:
+                - !GetAtt RequestQueue.Arn
+
+  HandlerRole: 
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: "/"
+                
+  HandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.lambda_handler
+      Runtime: python3.7
+      CodeUri: ./Handler
+      Role: !GetAtt HandlerRole.Arn
+      Environment:
+        Variables:
+          DetectorName: !Ref DetectorFunction
+          ClassifierName: !Ref ClassifierFunction
+          SlackToken: !Ref SlackToken
+
+  HandlerFunctionEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    DependsOn: HandlerPolicy
+    Properties:
+      BatchSize: 1
+      Enabled: true
+      EventSourceArn: !GetAtt RequestQueue.Arn
+      FunctionName: !GetAtt HandlerFunction.Arn
+
+  DispatcherPolicy:
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: Dispatcher
+      Roles:
+        - !Ref DispatcherRole
+      PolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Action: 
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - 
+            Effect: Allow
+            Action: 
+                - sqs:SendMessage
+            Resource:
+                - !GetAtt RequestQueue.Arn
+
+  DispatcherRole: 
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: "/"
+                
+  DispatcherFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.lambda_handler
+      Runtime: python3.7
+      CodeUri: ./Dispatcher
+      Role: !GetAtt DispatcherRole.Arn
+      Environment:
+        Variables:
+          QueueUrl: !Ref RequestQueue
+      Events:
+        MlBotApiGet:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get 
+        MlBotApiPost:
+          Type: Api
+          Properties:
+            Path: /
+            Method: post
+
