@@ -15,9 +15,9 @@ In this lab you will use AWS Lambda and Amazon API Gateway to create a public in
 
 ## Task 2: Update the IAM role
 Update the IAM role to allow the Lambda function to use the SQS queue
-1. Browse to the AWS IAM console to edit the **mlbot** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-dispatch
+1. Browse to the AWS IAM console to edit the **mlbot-dispatch** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-dispatch
 2. Click on the **Add inline policy** button
-3. Click on the **JSON** tab and replace the existing policy with the following. Include the ARN of your **mldetect** Lambda function:
+3. Click on the **JSON** tab and replace the existing policy with the following. Include the ARN of your ```<SQS queue arn>```:
 
 ```
 {
@@ -39,7 +39,7 @@ Update the IAM role to allow the Lambda function to use the SQS queue
 
 ## Task 3: Update the Lambda function
 Add boilerplate code to respond correctly when Slack verifies your endpoint 
-1. Browse to the AWS Lambda console to edit the **mlbot** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-dispatch
+1. Browse to the AWS Lambda console to edit the **mlbot-dispatch** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-dispatch
 2. Replace the **lambda_function.py** template code with the following ([mlbot-lambda.py](mlbot-lambda.py)):
 ```
 import json

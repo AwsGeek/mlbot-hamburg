@@ -48,7 +48,7 @@ def lambda_handler(event, context):
     
     print("Aircraft detected: " + classify_aircraft(event['url']))
 ```
-7. Create environment variables **DetextorName** and **ClassifierName** and set to the names of your Lambda functions **mlbot-detect** and **mlbot-classify**
+7. Create environment variables **DetectorName** and **ClassifierName** and set to the names of your Lambda functions **mlbot-detect** and **mlbot-classify**
 8. Click the **Save** button to finish
 
 ## Task 2: Update the IAM role
