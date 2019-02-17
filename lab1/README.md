@@ -103,7 +103,7 @@ What result do you get?
 Update the IAM role to allow invocation of the SageMaker InvokeEndpoint API
 1. Browse to the AWS IAM console to edit the **mlbot-classify** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-classify
 2. Click on the **Add inline policy** button
-3. Click on the **JSON** tab and replace the existing policy with the following. Replace ```<S3 bucket name>``` with the name of your S3 bucket.
+3. Click on the **JSON** tab and replace the existing policy with the following. Replace ```<SageMaker Endpoint ARN>``` with the name of your S3 bucket.
 
 ```
 {
