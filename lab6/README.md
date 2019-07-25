@@ -11,6 +11,7 @@ Delete all SageMaker resources used during this tutorial
 2. Delete **mlbot** endpoint configs: https://console.aws.amazon.com/sagemaker/home#/endpointConfig
 3. Delete **mlbot** models: https://console.aws.amazon.com/sagemaker/home#/models
 4. Stop, then delete **mlbot** notebooks: https://console.aws.amazon.com/sagemaker/home#/notebooks
+5. Stop, then delete **mlbot** sagemaker instance: https://console.aws.amazon.com/sagemaker/home#/notebook-instances
 
 ## Task 3: API Gateway resources
 1. Delete **mlbot** APIs: https://console.aws.amazon.com/apigateway/home#/apis
