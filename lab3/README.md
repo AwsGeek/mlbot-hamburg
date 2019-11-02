@@ -86,7 +86,7 @@ Create a test event and test your Lambda function
 * Code:
 ```
 {
-  "url": "https://www.awsgeek.com/hamburg19/airbus-a320.jpg"
+  "url": "https://github.com/AwsGeek/mlbot-hamburg/raw/master/lab5/airbus-a320.jpg"
 }
 ```
 4. Click on the **Create** button to continue
@@ -161,7 +161,7 @@ Test the Lambda function and SQS trigger
 3. Use the following to as the body of the message:
 ```
 {
-  "url": "https://www.awsgeek.com/hamburg19/airbus-a320.jpg"
+  "url": "https://github.com/AwsGeek/mlbot-hamburg/raw/master/lab5/airbus-a320.jpg"
 }
 ```
 4. Click on the **Send Message** button to continue
