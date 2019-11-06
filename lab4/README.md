@@ -7,15 +7,15 @@ In this lab you will use AWS Lambda and Amazon API Gateway to create a public in
 3. Fill out the following information for the Lambda function:
 * Name: **mlbot-dispatch**
 * Runtime: **Python 3.7**
-* Role: **Create a custom role**
-4. Specify the following information for the IAM role, then click the **Allow** button to continue:
-* IAM Role: **Create a new IAM Role**
-* Role Name: **mlbot-dispatch**
+* Permissions: **Expand: Choose or create an execution role**
+4. Specify the following information for Execution role:
+* Select **Create a new role with basic Lambda permissions**
+* A Role Name will be created containing: **mlbot-dispatch** name as prefix, the role name looks like mlbot-dispatch-role-kjerkt
 5. Click the **Create** function' button to finish:
 
 ## Task 2: Update the IAM role
 Update the IAM role to allow the Lambda function to use the SQS queue
-1. Browse to the AWS IAM console to edit the **mlbot-dispatch** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-dispatch
+1. In **mlbot-dispatch** Lambda function scroll down to **Execution role** pane and click on **View the mlbot-dispatch-role-<id> role** to go the IAM role page.
 2. Click on the **Add inline policy** button
 3. Click on the **JSON** tab and replace the existing policy with the following. Include the ARN of your ```<SQS queue arn>```:
 
