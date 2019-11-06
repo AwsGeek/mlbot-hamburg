@@ -41,10 +41,10 @@ Create an AWS Lambda function that uses Amazon SageMaker to classify an aircraft
 3. Fill out the following information for the Lambda function:
 * Name: **mlbot-classify**
 * Runtime: **Python 3.7**
-* Role: **Create a custom role**
-4. Specify the following information for the IAM role, then click the **Allow** button to continue:
-* IAM Role: **Create a new IAM Role**
-* Role Name: **mlbot-classify**
+* Permissions: **Expand: Choose or create an execution role**
+4. Specify the following information for Execution role:
+* **Create a new role with basic Lambda permissions**
+* A Role Name will be created containing: **mlbot-classify** name as prefix, the role name looks like mlbot-classify2-role-le0fretk
 5. Click the **Create** function' button
 6. Replace the existing Lambda function code with the following.
 ```
@@ -85,7 +85,7 @@ def lambda_handler(event, context):
 Create a test event and test your Lambda function 
 1. Browse to the AWS Lambda console to edit the **mlbot-classify** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-classify
 2. Click on the **Select a test event..** drop down and select **Configure test events**
-3. Specify the following onformation for the test event:
+3. Specify the following information for the test event:
 * Event template: **Hello World**
 * Event name: **mlbot**
 * Code:
@@ -101,9 +101,9 @@ What result do you get?
 
 ## Task 6: Update the IAM role
 Update the IAM role to allow invocation of the SageMaker InvokeEndpoint API
-1. Browse to the AWS IAM console to edit the **mlbot-classify** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-classify
+1. In **mlbot-classify** Lambda function scroll down to **Execution role** pane and click on **View the mlbot-classify2-role-<id> role** to go the IAM role page.
 2. Click on the **Add inline policy** button
-3. Click on the **JSON** tab and replace the existing policy with the following. Replace ```<SageMaker Endpoint ARN>``` with the name of your S3 bucket.
+3. Click on the **JSON** tab and replace the existing policy with the following. Replace ```<SageMaker Endpoint ARN>``` with the name of your SageMaker Endpoint ARN.
 
 ```
 {
