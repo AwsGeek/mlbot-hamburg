@@ -8,10 +8,10 @@ Create an AWS Lambda function that uses Amazon SageMaker to classify an aircraft
 3. Fill out the following information for the Lambda function:
 * Name: **mlbot-detect**
 * Runtime: **Python 3.7**
-* Role: **Create a custom role**
-4. Specify the following information for the IAM role, then click the **Allow** button to continue:
-* IAM Role: **Create a new IAM Role**
-* Role Name: **mlbot-detect**
+* Permissions: **Expand: Choose or create an execution role**
+4. Specify the following information for Execution role:
+* Select **Create a new role with basic Lambda permissions**
+* A Role Name will be created containing: **mlbot-detect** name as prefix, the role name looks like mlbot-detect-role-kjerkt
 5. Click the **Create** function' button to finish:
 Update the Lambda Function classify an aircraft in an image using Amazon SageMaker InvokeEndpoint API
 6. Edit the Lambda function, replace with the following Python code. 
@@ -56,9 +56,9 @@ def lambda_handler(event, context):
 
 ## Task 2: Update the IAM role
 Update the IAM role to allow invocation of the SageMaker InvokeEndpoint API
-1. Browse to the AWS IAM console to edit the **mlbot-detect** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-detect
+1. In **mlbot-detect** Lambda function scroll down to **Execution role** pane and click on **View the mlbot-detect-role-<id> role** to go the IAM role page.
 2. Click on the **Add inline policy** button
-3. Click on the **JSON** tab and replace the existing policy with the following. Replace ```<S3 bucket name>``` with the name of your S3 bucket.
+3. Click on the **JSON** tab and replace the existing policy with the following.
 
 ```
 {
