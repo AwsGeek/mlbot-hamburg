@@ -8,10 +8,10 @@ Create an AWS Lambda function that coordinates detection and classification of a
 3. Fill out the following information for the Lambda function:
 * Name: **mlbot-handler**
 * Runtime: **Python 3.7**
-* Role: **Create a custom role**
-4. Specify the following information for the IAM role, then click the **Allow** button to continue:
-* IAM Role: **Create a new IAM Role**
-* Role Name: **mlbot-handler**
+* Permissions: **Expand: Choose or create an execution role**
+4. Specify the following information for Execution role:
+* Select **Create a new role with basic Lambda permissions**
+* A Role Name will be created containing: **mlbot-handler** name as prefix, the role name looks like mlbot-handler-role-kjer4h
 5. Click the **Create** function' button to finish:
 6. Edit the Lambda function, replace with the following Python code. 
 ```
@@ -53,7 +53,7 @@ def lambda_handler(event, context):
 
 ## Task 2: Update the IAM role
 Update the IAM role to allow invocation of the **mlbot-detect** and **mlbot-classify** Lambda functions
-1. Browse to the AWS IAM console to edit the **mlbot-handler** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-handler
+1. In **mlbot-handler** Lambda function scroll down to **Execution role** pane and click on **View the mlbot-handler-role-<id> role** to go the IAM role page.
 2. Click on the **Add inline policy** button
 3. Click on the **JSON** tab and replace the existing policy with the following. Include the ARNs of your **mlbot-detect** and **mlbot-classify** Lambda functions:
 
@@ -108,9 +108,9 @@ What happens?
 
 ## Task 5: Update the IAM role (again)
 Update the IAM role to allow the Lambda function to interact with the SQS queue
-1. Browse to the AWS IAM console to edit the **mlbot-handler** IAM role: https://console.aws.amazon.com/iam/home#/roles/mlbot-handler
+1. In **mlbot-handler** Lambda function scroll down to **Execution role** pane and click on **View the mlbot-handler-role-<id> role** to go the IAM role page.
 2. Click on the **Add inline policy** button
-3. Click on the **JSON** tab and replace the existing policy with the following. Include the ARNs of your **mlbot-detect** and **mlbot-classify** Lambda functions:
+3. Click on the **JSON** tab and replace the existing policy with the following. Include the ARN of your **SQS queue**:
 
 ```
 {

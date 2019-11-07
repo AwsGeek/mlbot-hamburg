@@ -18,9 +18,9 @@ The Request URL will show **Verified** if Slack can successfully reach your mlbo
 3. In the **Subscribe to Bot Events** section, click on the **Add Bot User Event** button, then select the **app_mentions** event type. Click in the **Save Changes** button to finish.
 
 ## Task 3: Update the dispatch Lambda functions
-Update code to the **mlbot-dispatch** funtion to parse and dispatch incomoing requests from your Slack bot. 
+Update code to the **mlbot-dispatch** funtion to parse and dispatch incoming requests from your Slack bot. 
 1. Browse to the AWS Lambda console to edit the **mlbot-dispatch** Lambda function: https://console.aws.amazon.com/lambda/home#/functions/mlbot-dispatch
-2. Replace the **lambda_function.py** template code with the following. In addition, replace **```<SQS queue URL>```** with the URL of your SQS queue
+2. Replace the **lambda_function.py** template code with the following. 
 ```
 import os
 import json
