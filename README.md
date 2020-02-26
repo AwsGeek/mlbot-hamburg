@@ -1,5 +1,6 @@
 # Build a Serverless Machine Learning Bot
-<p align="center"><img src="https://www.awsgeek.com/hamburg19/boeing-747.jpg"></p>
+<p align="center"><img src="lab5/boeing-747.jpg"></p>
+
 
 ## Overview
 In this tutorial, you will build a serverless bot using Slack and Amazon Web Services, including AWS Lambda, Amazon SageMaker, SQS, and API Gateway. The bot will help you classify commercial aircraft found in images. 
